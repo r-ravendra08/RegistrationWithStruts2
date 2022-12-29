@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation  
+//DTD Struts Configuration 2.1//EN"   
+"http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	<package name="default" extends="struts-default">
+		<global-exception-mappings>
+			<exception-mapping exception="java.lang.Exception"
+				result="error" />
+		</global-exception-mappings>
+
+		<action name="register" class="com.entity.Users">
+			<result name="input">register.jsp</result>
+			<result name="success">reg-success-alert.jsp</result>
+			<result name="error">register-error.jsp</result>
+		</action>
+
+		<action name="loginprocess" class="com.entity.LoginUser">
+			<result name="input">login.jsp</result>
+			<result name="success">log-success-alert.jsp</result>
+			<result name="error">login-error.jsp</result>
+		</action>
+
+		<action name="profile" class="com.entity.Profile">
+			<result name="success">profilesuccess.jsp</result>
+			<result name="error">profileerror.jsp</result>
+		</action>
+
+		<action name="logout" class="com.entity.LoginUser" method="logoutmethod">
+			<result name="success">logout.jsp</result>
+		</action>
+	</package>
+
+
+</struts>  
