@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
 </head>
-<body>
+<body align="center">
 	<script type="text/javascript">
 		alert('login Success');
 	</script>

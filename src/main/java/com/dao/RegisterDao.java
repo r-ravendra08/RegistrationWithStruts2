@@ -5,6 +5,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.Date;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -17,31 +24,32 @@ import com.entity.Users;
 import com.mysql.jdbc.PreparedStatement;
 
 public class RegisterDao {
+
 	public static SessionFactory factory = new Configuration().configure().buildSessionFactory();
-	
-	public static Connection getConnection(){
-		Connection con=null;
+
+	public static Connection getConnection() {
+		Connection con = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			con=DriverManager.getConnection("jdbc:mysql://localhost:3306/registrationwithstruts","root","");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/registrationwithstruts", "root", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return con;
 	}
-	
-	public static boolean check(String email){
-		boolean status=false;
+
+	public static boolean check(String email) {
+		boolean status = false;
 		try {
-			Connection con=RegisterDao.getConnection();
-			PreparedStatement ps=(PreparedStatement) con.prepareStatement("select*from users where email=?");
+			Connection con = RegisterDao.getConnection();
+			PreparedStatement ps = (PreparedStatement) con.prepareStatement("select*from users where email=?");
 			ps.setString(1, email);
-			ResultSet rs=ps.executeQuery();
-			if(rs.next()){
-				System.out.println("Email Already exist");
-			}else{
-				System.out.println("You are New User.");
-				status=true;
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				// System.out.println("Email Already exist");
+			} else {
+				// System.out.println("You are New User.");
+				status = true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -54,17 +62,15 @@ public class RegisterDao {
 		try {
 			Session session = factory.openSession();
 			Transaction tx = session.beginTransaction();
-			Date date=new Date();
-			u.setDateTime(date);
 			status = (Integer) session.save(u);
 			tx.commit();
 			session.close();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return status;
 	}
+
 	public static boolean validate(String email, String password) {
 		Transaction transaction = null;
 		Users users = null;
@@ -75,7 +81,7 @@ public class RegisterDao {
 					.uniqueResult();
 
 			if (users != null && users.getPassword().equals(password)) {
-				//System.out.println(users.toString());
+				// System.out.println(users.toString());
 				return true;
 			}
 			transaction.commit();
@@ -85,16 +91,15 @@ public class RegisterDao {
 		return false;
 
 	}
-	
-	public static Users getLoggedInUserDetails(String email){
-		
-		Session session=factory.openSession();
-		Criteria cr=session.createCriteria(Users.class);
-		cr.add(Restrictions.eq("email", email));
-		Users users=(Users) cr.uniqueResult();
-		System.out.println(users);
-		return users;
-	
+
+	public static Users getLoggedInUserDetails(String email) {
+
+		Session session = factory.openSession();
+		Users user = (Users) session.createQuery("FROM Users WHERE email = :email").setParameter("email", email)
+				.uniqueResult();
+		//System.out.println(user+"hhh");
+		return user;
+
 	}
 
 }

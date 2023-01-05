@@ -64,7 +64,7 @@
 			out.println("User Id : " + RegisterDao.getLoggedInUserDetails(email).getId() + "<br><hr>");
 			out.println("Name : " + RegisterDao.getLoggedInUserDetails(email).getName() + "<br><hr>");
 			out.print("Email Address : " + RegisterDao.getLoggedInUserDetails(email).getEmail() + "<br><hr>");
-			out.print("Date & Time : " + RegisterDao.getLoggedInUserDetails(email).getDateTime() + "<br><hr>");
+			out.print("Date & Time : " + RegisterDao.getLoggedInUserDetails(email).getDateofjoining()+ "<br><hr>");
 		%>
 	</div>
 	<center>

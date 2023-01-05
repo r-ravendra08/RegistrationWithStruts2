@@ -4,6 +4,8 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.interceptor.SessionAware;
 
@@ -14,6 +16,8 @@ public class LoginUser extends ActionSupport implements SessionAware {
 	/**
 	 * 
 	 */
+	public static final Logger logger = Logger.getLogger(LoginUser.class.getName());
+
 	private static final long serialVersionUID = 1L;
 	private String email, password;
 	SessionMap<String, String> sessionmap;
@@ -48,13 +52,16 @@ public class LoginUser extends ActionSupport implements SessionAware {
 	
 
 	public String execute() {
-		
+		  BasicConfigurator.configure();  
+
 		if (RegisterDao.validate(email, password)) {
 			
 			sessionmap.put("login", "true");
 			sessionmap.put("email", email);
+			logger.info("Login Success:= "+email);
 			return "success";
 		} else {
+			logger.error("Login Error");
 			return "error";
 		}
 	}
@@ -70,6 +77,7 @@ public class LoginUser extends ActionSupport implements SessionAware {
 
 	public String logoutmethod() {
 		sessionmap.invalidate();
+		logger.info("Logout Success.");
 		return "success";
 	}
 

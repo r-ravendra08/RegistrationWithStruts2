@@ -4,6 +4,8 @@
 "http://struts.apache.org/dtds/struts-2.1.dtd">
 
 <struts>
+	<constant name="struts.devMode" value="true" />
+
 	<package name="default" extends="struts-default">
 		<global-exception-mappings>
 			<exception-mapping exception="java.lang.Exception"
@@ -11,6 +13,7 @@
 		</global-exception-mappings>
 
 		<action name="register" class="com.entity.Users">
+		
 			<result name="input">register.jsp</result>
 			<result name="success">reg-success-alert.jsp</result>
 			<result name="error">register-error.jsp</result>

@@ -1,14 +1,14 @@
 package com.entity;
 
-import java.util.Date;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import com.dao.RegisterDao;
 import com.opensymphony.xwork2.ActionSupport;
@@ -18,21 +18,24 @@ public class Users extends ActionSupport {
 
 	/**
 	 * 
+	 * 
 	 */
+	public static final Logger logger = Logger.getLogger(Users.class.getName());
+
 	private static final long serialVersionUID = 4399548643038005847L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private String name, email, password;
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date dateTime;
+	@Column(name = "Date_Of_Joining")
+	private String dateofjoining;
 
-	public Date getDateTime() {
-		return dateTime;
+	public String getDateofjoining() {
+		return dateofjoining;
 	}
 
-	public void setDateTime(Date dateTime) {
-		this.dateTime = dateTime;
+	public void setDateofjoining(String dateofjoining) {
+		this.dateofjoining = dateofjoining;
 	}
 
 	public int getId() {
@@ -73,38 +76,44 @@ public class Users extends ActionSupport {
 
 		if (email.matches(regex)) {
 
+		} else if (email.length() < 1) {
+			addFieldError("email", "Email can't be blank");
 		} else {
-			addFieldError("email", "Enter Valid Email Address");
+			addFieldError("email", "Enter vaid email address");
 
 		}
 
 		if (name.length() < 1)
 			addFieldError("name", "Name can't be blank");
-		if (email.length() < 1)
-			addFieldError("email", "Email can't be blank");
-		if (password.length() < 5)
+
+		if (password.length() < 1) {
+			addFieldError("password", "Password can't be blank");
+
+		} else if (password.length() < 5) {
 			addFieldError("password", "Password must be greater than 4");
+		}
+
 	}
 
 	public String execute() {
+		  BasicConfigurator.configure();  
 		if (!RegisterDao.check(email)) {
 			System.out.println("user already exist");
+			logger.error("User already exist:= " +email);
 			return "error";
 
 		} else {
 			int i = RegisterDao.register(this);
 			if (i > 0) {
+				  logger.info("You are a new User:= "+email);
 				return "success";
 			}
 			return "error";
 		}
-
 	}
 
 	@Override
 	public String toString() {
-		return "Users [id=" + id + ", name=" + name + ", email=" + email + ", dateTime=" + dateTime + "]";
+		return "Users [id=" + id + ", name=" + name + ", email=" + email + ", dateofjoining=" + dateofjoining + "]";
 	}
-	
-
 }
